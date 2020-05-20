@@ -151,23 +151,39 @@ int RpcPress::init(const PressOptions* options) {
         LOG(ERROR) << "Fail to initialize rpc client";
         return ret;
     }
-
-    if (_options.input.empty()) {
+    if (_options.input.empty() && _options.binary.empty()) {
         LOG(ERROR) << "-input is empty";
         return -1;
     }
     brpc::JsonLoader json_util(_importer, &_factory, 
                                      _options.service, _options.method);
-    if (butil::PathExists(butil::FilePath(_options.input))) {
-        int fd = open(_options.input.c_str(), O_RDONLY);
-        if (fd < 0) {
-            PLOG(ERROR) << "Fail to open " << _options.input;
-            return -1;
+    if (!_options.input.empty()) {
+        if (butil::PathExists(butil::FilePath(_options.input))) {
+            int fd = open(_options.input.c_str(), O_RDONLY);
+            if (fd < 0) {
+                PLOG(ERROR) << "Fail to open " << _options.input;
+                return -1;
+            }
+            json_util.load_messages(fd, &_msgs);
+        } else {
+            json_util.load_messages(_options.input, &_msgs);
         }
-        json_util.load_messages(fd, &_msgs);
-    } else {
-        json_util.load_messages(_options.input, &_msgs);
     }
+    if (!_options.binary.empty()) {
+        auto msg = json_util.GetNewMsg();
+        butil::FilePath file_path(_options.input);
+        butil::File proto_file(file_path, butil::File::Flags::FLAG_OPEN | butil::File::Flags::FLAG_READ);
+        int64_t length = proto_file.GetLength();
+        std::string buf;
+        buf.resize(length);
+        proto_file.Read(0, &(buf[0]), length);
+        bool rc = msg->ParseFromString(buf);
+        _msgs.push_back(msg);
+        std::string data;
+        json2pb::ProtoMessageToJson(*msg, &data);
+         LOG(INFO) << "Req:" << data;
+    }
+
     if (_msgs.empty()) {
         LOG(ERROR) << "Fail to load requests";
         return -1;

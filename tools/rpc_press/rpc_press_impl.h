@@ -36,6 +36,7 @@ struct PressOptions {
     int server_type;        // server type: 0 = hulu server, 1 = old pbrpc server, 2 = sofa server
     double test_req_rate;      // 0 = no limit
     int test_thread_num;
+    std::string binary;
     std::string input;
     std::string output;
     std::string host;            // server's ip:port, used by hulu server and sofa server

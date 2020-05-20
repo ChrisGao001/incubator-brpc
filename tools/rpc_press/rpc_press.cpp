@@ -30,6 +30,7 @@ DEFINE_string(inc, "", "Include paths for proto, separated by semicolon(;)");
 DEFINE_string(method, "example.EchoService.Echo", "The full method name");
 DEFINE_string(server, "0.0.0.0:8002", "ip:port of the server when -load_balancer is empty, the naming service otherwise");
 DEFINE_string(input, "", "The file containing requests in json format");
+DEFINE_string(binary, "", "The file containing requests in binary format");
 DEFINE_string(output, "", "The file containing responses in json format");
 DEFINE_string(lb_policy, "", "The load balancer algorithm: rr, random, la, c_murmurhash, c_md5");
 DEFINE_int32(thread_num, 0, "Number of threads to send requests. 0: automatically chosen according to -qps");
@@ -72,6 +73,7 @@ bool set_press_options(pbrpcframework::PressOptions* options){
     }
 
     options->input = FLAGS_input;
+    options->binary = FLAGS_binary;
     options->output = FLAGS_output;
     options->connection_type = FLAGS_connection_type;
     options->connect_timeout_ms = FLAGS_connection_timeout_ms;

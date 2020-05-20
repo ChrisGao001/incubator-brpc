@@ -43,6 +43,9 @@ public:
     void load_messages(int fd, std::deque<google::protobuf::Message*>* out_msgs);
     void load_messages(const std::string& jsons,
                        std::deque<google::protobuf::Message*>* out_msgs);
+    google::protobuf::Message* GetNewMsg() {
+        return _request_prototype->New();
+    }
     
 private:
     class Reader;
