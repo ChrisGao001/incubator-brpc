@@ -20,7 +20,7 @@
 #include <butil/logging.h>
 #include <brpc/server.h>
 #include <brpc/channel.h>
-#include "view.pb.h"
+#include "tools/rpc_view/view.pb.h"
 
 DEFINE_int32(port, 8888, "TCP Port of this server");
 DEFINE_string(target, "", "The server to view");
