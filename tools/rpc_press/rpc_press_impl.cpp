@@ -171,17 +171,23 @@ int RpcPress::init(const PressOptions* options) {
     }
     if (!_options.binary.empty()) {
         auto msg = json_util.GetNewMsg();
-        butil::FilePath file_path(_options.input);
+        if (msg == nullptr) {
+            LOG(ERROR) << "msg is null";
+        }
+        butil::FilePath file_path(_options.binary);
         butil::File proto_file(file_path, butil::File::Flags::FLAG_OPEN | butil::File::Flags::FLAG_READ);
         int64_t length = proto_file.GetLength();
+        LOG(INFO) << "msg_name:" << msg->GetDescriptor()->name() << " file_length:" << length;
         std::string buf;
         buf.resize(length);
         proto_file.Read(0, &(buf[0]), length);
         bool rc = msg->ParseFromString(buf);
-        _msgs.push_back(msg);
+        if (rc) {
+            _msgs.push_back(msg);
+        }
         std::string data;
         json2pb::ProtoMessageToJson(*msg, &data);
-         LOG(INFO) << "Req:" << data;
+        LOG(INFO) << "Req:" << data << " rc:" << rc;
     }
 
     if (_msgs.empty()) {
