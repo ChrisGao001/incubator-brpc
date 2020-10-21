@@ -251,6 +251,7 @@ void RpcPress::sync_client() {
     timeq.push_back(butil::gettimeofday_us());
     while (!_stop) {
         brpc::Controller* cntl = new brpc::Controller;
+        cntl->set_request_compress_type((brpc::CompressType)(_options.request_compress_type));
         msg_index = (msg_index + _options.test_thread_num) % _msgs.size();
         Message* request = _msgs[msg_index];
         Message* response = _pbrpc_client->get_output_message();

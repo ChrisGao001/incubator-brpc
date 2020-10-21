@@ -43,6 +43,20 @@ cc_binary(
 )
 
 cc_binary(
+    name = "rpc_replay",
+    srcs = [
+        "rpc_replay/rpc_replay.cpp",
+        "rpc_replay/info_thread.cpp",
+        "rpc_replay/info_thread.h",
+    ],
+    deps = [
+        "//:brpc",
+    ],
+    copts = COPTS,
+)
+
+
+cc_binary(
     name = "rpc_press",
     srcs = glob([
         "rpc_press/*.cpp",
