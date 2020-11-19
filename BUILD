@@ -146,6 +146,7 @@ BUTIL_SRCS = [
     "src/butil/third_party/snappy/snappy-stubs-internal.cc",
     "src/butil/third_party/snappy/snappy.cc",
     "src/butil/third_party/murmurhash3/murmurhash3.cpp",
+    "src/butil/third_party/lz4/lz4.cc",
     "src/butil/arena.cpp",
     "src/butil/at_exit.cc",
     "src/butil/atomicops_internals_x86_gcc.cc",
